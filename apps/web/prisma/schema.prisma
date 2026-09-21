@@ -314,7 +314,7 @@ model Invoice {
 model LinkedInPost {
   id                String     @id @default(cuid())
   clientId          String
-  url               String?    // LinkedIn post URL (set after publish)
+  url               String?    @unique // LinkedIn post URL (set after publish)
   text              String     @db.Text
   status            PostStatus @default(DRAFT)
   humanizationScore Float?     // 0.0 - 1.0 AI detection avoidance score

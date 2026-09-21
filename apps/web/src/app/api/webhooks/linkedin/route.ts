@@ -29,12 +29,27 @@ export async function POST(req: NextRequest) {
 
     switch (payload.event) {
       case "post.published": {
+        // Validate clientId
+        const client = await db.client.findUnique({
+          where: { id: payload.clientId },
+        });
+
+        if (!client) {
+          console.error(`Client not found: ${payload.clientId}`);
+          return NextResponse.json(
+            { error: "Client not found" },
+            { status: 404 }
+          );
+        }
+
         // Create or update LinkedIn post record
-        await db.linkedInPost.upsert({
+        const post = await db.linkedInPost.upsert({
           where: { url: payload.url },
           create: {
+            clientId: payload.clientId,
             url: payload.url,
             text: "", // Will be populated by the bot
+            status: "PUBLISHED",
             impressions: payload.metrics?.impressions || 0,
             likes: payload.metrics?.likes || 0,
             comments: payload.metrics?.comments || 0,
@@ -57,13 +72,20 @@ export async function POST(req: NextRequest) {
                 : 0,
           },
         });
+
+        console.log(`LinkedIn post ${post.id} upserted for client ${payload.clientId}`);
         break;
       }
 
       case "post.updated": {
         // Update LinkedIn post metrics
-        if (payload.metrics) {
-          await db.linkedInPost.update({
+        if (!payload.metrics) {
+          console.warn(`No metrics provided for post update: ${payload.url}`);
+          break;
+        }
+
+        try {
+          const post = await db.linkedInPost.update({
             where: { url: payload.url },
             data: {
               impressions: payload.metrics.impressions,
@@ -80,15 +102,31 @@ export async function POST(req: NextRequest) {
                   : 0,
             },
           });
+
+          console.log(`LinkedIn post ${post.id} metrics updated`);
+        } catch (error) {
+          console.error(`Failed to update post ${payload.url}:`, error);
+          return NextResponse.json(
+            { error: "Post not found" },
+            { status: 404 }
+          );
         }
+
         break;
       }
 
       case "post.deleted": {
         // Mark post as deleted or remove it
-        await db.linkedInPost.delete({
-          where: { url: payload.url },
-        });
+        try {
+          await db.linkedInPost.delete({
+            where: { url: payload.url },
+          });
+
+          console.log(`LinkedIn post deleted: ${payload.url}`);
+        } catch (error) {
+          console.warn(`Post not found for deletion: ${payload.url}`);
+        }
+
         break;
       }
 

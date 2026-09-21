@@ -72,12 +72,18 @@ export async function POST(req: NextRequest) {
       case "payment_intent.payment_failed": {
         const paymentIntent = event.data.object as Stripe.PaymentIntent;
 
-        await db.order.updateMany({
+        const result = await db.order.updateMany({
           where: {
             stripeInvoiceId: paymentIntent.id,
           },
           data: { status: OrderStatus.CANCELLED },
         });
+
+        if (result.count === 0) {
+          console.warn(`No order found for failed payment: ${paymentIntent.id}`);
+        } else {
+          console.log(`Order cancelled for failed payment: ${paymentIntent.id}`);
+        }
 
         break;
       }

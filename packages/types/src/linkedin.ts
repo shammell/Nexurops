@@ -62,6 +62,7 @@ export interface GetAnalyticsInput {
 export interface LinkedInWebhookPayload {
   event: "post.published" | "post.updated" | "post.deleted";
   postId: string;
+  clientId: string;
   url: string;
   metrics?: {
     impressions: number;

@@ -25,16 +25,16 @@ export {
 } from "@prisma/client";
 
 // Re-export Prisma-generated model types (canonical shapes)
+// NOTE: User and Account live in ./user.ts; LinkedInPost and LinkedInMetrics
+// live in ./linkedin.ts.  Do NOT re-export them here to avoid duplicate
+// identifiers in the barrel export (index.ts).
 export type {
-  User,
   Client,
   Project,
   Order,
   Invoice,
   Lead,
   Service,
-  LinkedInPost,
-  LinkedInMetrics,
   TeamMember,
 } from "@prisma/client";
 
