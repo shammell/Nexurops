@@ -1,0 +1,485 @@
+{
+  "invisible_chars": [
+    "zero_width_space",
+    "zero_width_joiner",
+    "zero_width_non_joiner",
+    "bom_utf8",
+    "soft_hyphen",
+    "non_breaking_space",
+    "tag_character",
+    "word_joiner",
+    "paragraph_separator",
+    "line_separator",
+    "copyright_sign"
+  ],
+  "ai_lexicon": [
+    {
+      "term": "delve",
+      "replacement": "explore"
+    },
+    {
+      "term": "leverage",
+      "replacement": "use"
+    },
+    {
+      "term": "robust",
+      "replacement": "reliable"
+    },
+    {
+      "term": "synergy",
+      "replacement": "collaboration"
+    },
+    {
+      "term": "optimize",
+      "replacement": "improve"
+    },
+    {
+      "term": "paradigm",
+      "replacement": "model"
+    },
+    {
+      "term": "holistic",
+      "replacement": "comprehensive"
+    },
+    {
+      "term": "integrate",
+      "replacement": "connect"
+    },
+    {
+      "term": "pivot",
+      "replacement": "change direction"
+    },
+    {
+      "term": "scalable",
+      "replacement": "expandable"
+    },
+    {
+      "term": "innovative",
+      "replacement": "new"
+    },
+    {
+      "term": "cutting-edge",
+      "replacement": "latest"
+    },
+    {
+      "term": "groundbreaking",
+      "replacement": "significant"
+    },
+    {
+      "term": "revolutionize",
+      "replacement": "transform"
+    },
+    {
+      "term": "game-changer",
+      "replacement": "major change"
+    },
+    {
+      "term": "disruptive",
+      "replacement": "transformative"
+    },
+    {
+      "term": "empowering",
+      "replacement": "enabling"
+    },
+    {
+      "term": "seamless",
+      "replacement": "smooth"
+    },
+    {
+      "term": "curated",
+      "replacement": "selected"
+    },
+    {
+      "term": "personalized",
+      "replacement": "tailored"
+    },
+    {
+      "term": "embark",
+      "replacement": "start"
+    },
+    {
+      "term": "endeavor",
+      "replacement": "project"
+    },
+    {
+      "term": "facilitate",
+      "replacement": "enable"
+    },
+    {
+      "term": "harness",
+      "replacement": "use"
+    },
+    {
+      "term": "illuminate",
+      "replacement": "shed light on"
+    },
+    {
+      "term": "unveil",
+      "replacement": "reveal"
+    },
+    {
+      "term": "unprecedented",
+      "replacement": "never seen before"
+    },
+    {
+      "term": "in today's fast-paced world",
+      "replacement": "today"
+    },
+    {
+      "term": "it is imperative",
+      "replacement": "it's important"
+    },
+    {
+      "term": "thus",
+      "replacement": "so"
+    },
+    {
+      "term": "moreover",
+      "replacement": "also"
+    },
+    {
+      "term": "furthermore",
+      "replacement": "also"
+    },
+    {
+      "term": "herein lies",
+      "replacement": "here's"
+    },
+    {
+      "term": "in essence",
+      "replacement": "basically"
+    },
+    {
+      "term": "as a matter of fact",
+      "replacement": "actually"
+    },
+    {
+      "term": "in the final analysis",
+      "replacement": "ultimately"
+    },
+    {
+      "term": "veritable",
+      "replacement": "true"
+    },
+    {
+      "term": "plethora",
+      "replacement": "lots"
+    },
+    {
+      "term": "myriad",
+      "replacement": "many"
+    },
+    {
+      "term": "propitious",
+      "replacement": "favorable"
+    },
+    {
+      "term": "heretofore",
+      "replacement": "until now"
+    },
+    {
+      "term": "amidst",
+      "replacement": "among"
+    },
+    {
+      "term": "endeavor",
+      "replacement": "effort"
+    },
+    {
+      "term": "notwithstanding",
+      "replacement": "despite"
+    },
+    {
+      "term": "stakeholders",
+      "replacement": "people involved"
+    },
+    {
+      "term": "ecosystem",
+      "replacement": "system"
+    },
+    {
+      "term": "best practices",
+      "replacement": "what works"
+    },
+    {
+      "term": "low-hanging fruit",
+      "replacement": "easy wins"
+    },
+    {
+      "term": "move the needle",
+      "replacement": "make progress"
+    },
+    {
+      "term": "bandwidth",
+      "replacement": "capacity"
+    },
+    {
+      "term": "circle back",
+      "replacement": "follow up"
+    },
+    {
+      "term": "deep dive",
+      "replacement": "investigation"
+    },
+    {
+      "term": "touch base",
+      "replacement": "check in"
+    },
+    {
+      "term": "paradigm shift",
+      "replacement": "major change"
+    },
+    {
+      "term": "win-win",
+      "replacement": "good for everyone"
+    },
+    {
+      "term": "think outside the box",
+      "replacement": "think creatively"
+    },
+    {
+      "term": "at the end of the day",
+      "replacement": "ultimately"
+    },
+    {
+      "term": "needless to say",
+      "replacement": "obviously"
+    },
+    {
+      "term": "it goes without saying",
+      "replacement": "clearly"
+    },
+    {
+      "term": "in my humble opinion",
+      "replacement": "I think"
+    },
+    {
+      "term": "take it to the next level",
+      "replacement": "improve it"
+    },
+    {
+      "term": "low-key",
+      "replacement": "quietly"
+    },
+    {
+      "term": "high-key",
+      "replacement": "obviously"
+    },
+    {
+      "term": "vibe",
+      "replacement": "feel"
+    },
+    {
+      "term": "literally",
+      "replacement": "actually"
+    },
+    {
+      "term": "like seriously",
+      "replacement": "really"
+    },
+    {
+      "term": "no cap",
+      "replacement": "no lie"
+    },
+    {
+      "term": "periodt",
+      "replacement": "that's it"
+    },
+    {
+      "term": "on god",
+      "replacement": "honestly"
+    },
+    {
+      "term": "slay",
+      "replacement": "do great"
+    },
+    {
+      "term": "serve",
+      "replacement": "deliver"
+    },
+    {
+      "term": "ate",
+      "replacement": "did great"
+    },
+    {
+      "term": "no notes",
+      "replacement": "perfect"
+    },
+    {
+      "term": "lived up to the hype",
+      "replacement": "was worth it"
+    },
+    {
+      "term": "it is what it is",
+      "replacement": "it happened"
+    },
+    {
+      "term": "not gonna lie",
+      "replacement": "honestly"
+    },
+    {
+      "term": "ngl",
+      "replacement": "honestly"
+    },
+    {
+      "term": "imo",
+      "replacement": "I think"
+    },
+    {
+      "term": "tbh",
+      "replacement": "honestly"
+    },
+    {
+      "term": "nft",
+      "replacement": "non-fungible token"
+    },
+    {
+      "term": "grift",
+      "replacement": "scam"
+    },
+    {
+      "term": "hustle culture",
+      "replacement": "work ethic"
+    },
+    {
+      "term": "main character energy",
+      "replacement": "confidence"
+    },
+    {
+      "term": "break the internet",
+      "replacement": "go viral"
+    },
+    {
+      "term": "take a shot",
+      "replacement": "try"
+    },
+    {
+      "term": "shoot your shot",
+      "replacement": "try your best"
+    },
+    {
+      "term": "million dollar idea",
+      "replacement": "great idea"
+    },
+    {
+      "term": "moonshot",
+      "replacement": "ambitious goal"
+    },
+    {
+      "term": "unicorn status",
+      "replacement": "$1B valuation"
+    },
+    {
+      "term": "exit strategy",
+      "replacement": "plan to leave"
+    },
+    {
+      "term": "hockey stick growth",
+      "replacement": "exponential growth"
+    },
+    {
+      "term": "burn rate",
+      "replacement": "spending speed"
+    },
+    {
+      "term": "runway",
+      "replacement": "cash reserves"
+    },
+    {
+      "term": "pivoting",
+      "replacement": "changing direction"
+    },
+    {
+      "term": "disrupting",
+      "replacement": "transforming"
+    },
+    {
+      "term": "blockchain",
+      "replacement": "distributed ledger"
+    },
+    {
+      "term": "metaverse",
+      "replacement": "virtual world"
+    },
+    {
+      "term": "web3",
+      "replacement": "decentralized web"
+    },
+    {
+      "term": "tokenomics",
+      "replacement": "token economics"
+    },
+    {
+      "term": "diamond hands",
+      "replacement": "long-term investor"
+    },
+    {
+      "term": "paper hands",
+      "replacement": "quick seller"
+    },
+    {
+      "term": "going to the moon",
+      "replacement": "increasing in value"
+    },
+    {
+      "term": "HODL",
+      "replacement": "hold"
+    },
+    {
+      "term": "FOMO",
+      "replacement": "fear of missing out"
+    },
+    {
+      "term": "FUD",
+      "replacement": "fear, uncertainty, doubt"
+    },
+    {
+      "term": "shill",
+      "replacement": "promoter"
+    },
+    {
+      "term": "rug pull",
+      "replacement": "scam"
+    },
+    {
+      "term": "pump and dump",
+      "replacement": "manipulation"
+    },
+    {
+      "term": "GME to the moon",
+      "replacement": "meme stock"
+    },
+    {
+      "term": "diamond backed",
+      "replacement": "supported"
+    },
+    {
+      "term": "thanks for coming to my TED talk",
+      "replacement": "that's my take"
+    },
+    {
+      "term": "just sayin",
+      "replacement": "just noting"
+    },
+    {
+      "term": "just keeping it real",
+      "replacement": "being honest"
+    },
+    {
+      "term": "no shade",
+      "replacement": "no disrespect"
+    },
+    {
+      "term": "tea",
+      "replacement": "gossip"
+    },
+    {
+      "term": "spill the tea",
+      "replacement": "share the news"
+    },
+    {
+      "term": "looking forward to interfacing with you",
+      "replacement": "looking forward to talking with you"
+    }
+  ]
+}

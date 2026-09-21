@@ -1,0 +1,172 @@
+{
+  "hooks": [
+    {
+      "id": 1,
+      "name": "Curiosity + Timeframe",
+      "template": "Build [X] in [Y] minutes.",
+      "description": "Create immediate interest with time constraint",
+      "best_for": ["tutorial", "technical"],
+      "example": "Build a RAG system in 15 minutes. No LangChain. No vector DB. Just Python + Claude."
+    },
+    {
+      "id": 2,
+      "name": "Contrarian Take + Proof",
+      "template": "Everyone says [X]. But data shows [Y].",
+      "description": "Challenge conventional wisdom with evidence",
+      "best_for": ["insight", "thought_leadership"],
+      "example": "Everyone says AI agents need 10k examples to train. But we got 95% accuracy with just 100 examples."
+    },
+    {
+      "id": 3,
+      "name": "Problem + Agitate + Solve",
+      "template": "Struggling with [X]? Here's why... [solution]",
+      "description": "Identify pain point, escalate it, provide answer",
+      "best_for": ["tutorial", "case_study"],
+      "example": "Struggling with LLM hallucinations? RAG isn't enough—you need retrieval ranking. Here's how."
+    },
+    {
+      "id": 4,
+      "name": "Number + Insight",
+      "template": "[N] things I learned after [activity]",
+      "description": "Numbers grab attention, insights add value",
+      "best_for": ["insight", "journey"],
+      "example": "5 things I learned after building 100 AI agents for clients"
+    },
+    {
+      "id": 5,
+      "name": "Before/After",
+      "template": "From [bad state] to [good state] in [time]",
+      "description": "Show transformation and measurable progress",
+      "best_for": ["case_study", "journey"],
+      "example": "From manual data entry to fully automated—saved 40 hours/week in 2 weeks"
+    },
+    {
+      "id": 6,
+      "name": "Question + Answer",
+      "template": "Q: [Big question]?\nA: [Surprising answer]",
+      "description": "Pose problem, deliver unexpected solution",
+      "best_for": ["insight", "tutorial"],
+      "example": "Q: Can you build production AI without GPUs?\nA: Yes. Here's how with Claude API."
+    },
+    {
+      "id": 7,
+      "name": "Story + Lesson",
+      "template": "[Story]. Lesson: [insight]",
+      "description": "Tell relatable story, extract actionable lesson",
+      "best_for": ["journey", "case_study"],
+      "example": "Wasted $50k on ML infrastructure. Lesson: Use APIs first, optimize later."
+    },
+    {
+      "id": 8,
+      "name": "Mistake + Learning",
+      "template": "Biggest mistake: [X]. Now I [Y].",
+      "description": "Share vulnerability, demonstrate growth",
+      "best_for": ["journey", "insight"],
+      "example": "Biggest mistake: Building custom LLM. Now I use Claude APIs and ship 10x faster."
+    },
+    {
+      "id": 9,
+      "name": "Benchmark + Ranking",
+      "template": "Tested [X] tools. Winner: [Y] because [reason]",
+      "description": "Provide comparison and clear recommendation",
+      "best_for": ["insight", "tutorial"],
+      "example": "Tested 5 RAG frameworks. Winner: LangChain because of ecosystem maturity."
+    },
+    {
+      "id": 10,
+      "name": "Hype Check",
+      "template": "[Buzzword] is great, but here's the reality.",
+      "description": "Demystify overhyped concepts with practicality",
+      "best_for": ["insight", "thought_leadership"],
+      "example": "AI agents are amazing, but 80% of use cases need simple orchestration, not full autonomy."
+    },
+    {
+      "id": 11,
+      "name": "Counterintuitive Insight",
+      "template": "Counterintuitive: The best [X] is [Y], not [Z]",
+      "description": "Challenge assumptions with unexpected truth",
+      "best_for": ["insight"],
+      "example": "Counterintuitive: The best RAG isn't about more documents. It's about better retrieval ranking."
+    },
+    {
+      "id": 12,
+      "name": "Framework + Template",
+      "template": "Here's my [name] framework for [outcome].",
+      "description": "Provide repeatable system or mental model",
+      "best_for": ["tutorial", "thought_leadership"],
+      "example": "Here's my 3-step framework for building production AI: API → Observe → Optimize"
+    },
+    {
+      "id": 13,
+      "name": "Prediction + Why",
+      "template": "Prediction: [X] will [Y] by [time]. Why? [reason]",
+      "description": "Make bold claim backed by logic",
+      "best_for": ["insight", "thought_leadership"],
+      "example": "Prediction: RAG will be obsolete by 2027. Why? Better LLM context windows eliminate retrieval."
+    },
+    {
+      "id": 14,
+      "name": "Resource Reveal",
+      "template": "I'm sharing my [X]. Thousands use it.",
+      "description": "Offer valuable tool/resource with social proof",
+      "best_for": ["journey", "tutorial"],
+      "example": "I'm sharing my prompt template library. 5000+ engineers use it for agentic workflows."
+    },
+    {
+      "id": 15,
+      "name": "Comparison Matrix",
+      "template": "Comparing [X]: [Option A] vs [Option B] vs [Option C]",
+      "description": "Side-by-side analysis helps decision making",
+      "best_for": ["insight", "tutorial"],
+      "example": "Comparing RAG implementations: LangChain vs LlamaIndex vs Custom (with trade-offs)"
+    },
+    {
+      "id": 16,
+      "name": "What I Got Wrong",
+      "template": "I was wrong about [X]. The truth is [Y].",
+      "description": "Show growth and admit mistakes—builds trust",
+      "best_for": ["journey", "insight"],
+      "example": "I was wrong about needing fine-tuning. Prompt engineering + RAG is 90% of the battle."
+    },
+    {
+      "id": 17,
+      "name": "Trend Analysis",
+      "template": "The [trend] in AI is [direction]. Here's what it means.",
+      "description": "Contextualize industry shifts with implications",
+      "best_for": ["insight", "thought_leadership"],
+      "example": "The shift from fine-tuning to in-context learning means API-first architectures win."
+    },
+    {
+      "id": 18,
+      "name": "Personal Principle",
+      "template": "Principle I live by: [X]. Apply it to [domain].",
+      "description": "Share philosophy with domain-specific application",
+      "best_for": ["journey", "thought_leadership"],
+      "example": "Principle: 'Complexity is the enemy.' Apply to AI: Start with simplest solution that works."
+    },
+    {
+      "id": 19,
+      "name": "Behind The Scenes",
+      "template": "Behind the scenes of [X]: [Process/details]",
+      "description": "Pull back curtain on process—builds authenticity",
+      "best_for": ["journey", "case_study"],
+      "example": "Behind the scenes of building our AI platform: 60% architecture decisions, 30% infra, 10% code."
+    },
+    {
+      "id": 20,
+      "name": "Milestone + Reflection",
+      "template": "[Milestone] reached. What I've learned: [insights]",
+      "description": "Celebrate achievement while sharing lessons",
+      "best_for": ["journey"],
+      "example": "1000 customers reached. What I've learned: Product > marketing. API design > features."
+    },
+    {
+      "id": 21,
+      "name": "Code Snippet Reveal",
+      "template": "Here's the [N]-line code that [does X].",
+      "description": "Practical implementation with minimal setup",
+      "best_for": ["tutorial"],
+      "example": "Here's the 10-line code that replaces a $500/month service with Claude API."
+    }
+  ]
+}
