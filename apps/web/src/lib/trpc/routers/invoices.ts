@@ -143,4 +143,22 @@ export const invoicesRouter = router({
 
       return updatedInvoice;
     }),
+
+  delete: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const invoice = await ctx.db.invoice.findUnique({
+        where: { id: input.id },
+      });
+
+      if (!invoice) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Invoice not found" });
+      }
+
+      await ctx.db.invoice.delete({
+        where: { id: input.id },
+      });
+
+      return { id: input.id };
+    }),
 });

@@ -50,7 +50,7 @@ export function ClientsTable() {
       id: '3',
       userId: 'user-1',
       name: 'Michael Brown',
-      company: undefined,
+      company: null,
       email: 'michael@example.com',
       phone: null,
       status: 'INACTIVE',
@@ -145,7 +145,7 @@ export function ClientsTable() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {clients.map((client) => (
+          {clients.map((client: Client) => (
             <TableRow key={client.id}>
               <TableCell className="font-medium">{client.name}</TableCell>
               <TableCell>{client.company || '-'}</TableCell>

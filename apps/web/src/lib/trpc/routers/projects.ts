@@ -145,4 +145,22 @@ export const projectsRouter = router({
 
       return project;
     }),
+
+  delete: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const project = await ctx.db.project.findUnique({
+        where: { id: input.id },
+      });
+
+      if (!project) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Project not found" });
+      }
+
+      await ctx.db.project.delete({
+        where: { id: input.id },
+      });
+
+      return { id: input.id };
+    }),
 });

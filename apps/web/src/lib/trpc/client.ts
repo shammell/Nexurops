@@ -43,3 +43,5 @@ export const trpc = createTRPCNext<AppRouter>({
   },
   ssr: false,
 });
+
+export type TrpcClient = typeof trpc;
