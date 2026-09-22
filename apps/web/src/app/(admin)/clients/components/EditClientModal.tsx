@@ -1,11 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { trpc } from '@/lib/trpc/client';
+import { trpc } from '@/lib/trpc';
 import { z } from 'zod';
 
 const updateClientSchema = z.object({
@@ -27,7 +24,7 @@ export function EditClientModal({ clientId, onClose, onSuccess }: EditClientModa
   const [formData, setFormData] = useState<UpdateClientInput>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const { data: client, isLoading } = trpc.clients.getById.useQuery({ id: clientId });
+  const { data: client, isLoading } = (trpc as any).clients.getById.useQuery({ id: clientId });
 
   useEffect(() => {
     if (client) {
@@ -40,13 +37,13 @@ export function EditClientModal({ clientId, onClose, onSuccess }: EditClientModa
     }
   }, [client]);
 
-  const updateMutation = trpc.clients.update.useMutation({
+  const updateMutation = (trpc as any).clients.update.useMutation({
     onSuccess: () => {
       setErrors({});
       onSuccess();
       onClose();
     },
-    onError: (err) => {
+    onError: (err: any) => {
       setErrors({ submit: err.message });
     },
   });
@@ -67,62 +64,67 @@ export function EditClientModal({ clientId, onClose, onSuccess }: EditClientModa
     updateMutation.mutate({ id: clientId, ...validation.data });
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <div className="fixed inset-0 z-50 flex items-center justify-center">Loading...</div>;
 
   return (
-    <Dialog open={true} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Edit Client</DialogTitle>
-        </DialogHeader>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => !updateMutation.isPending && onClose()}>
+      <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+        <h2 className="text-xl font-bold mb-4">Edit Client</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Label htmlFor="name">Name</Label>
-            <Input
+            <label htmlFor="name" className="block text-sm font-medium mb-1">Name</label>
+            <input
               id="name"
+              type="text"
               placeholder="Client name"
               value={formData.name || ''}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, name: e.target.value })}
+              className="w-full px-3 py-2 border rounded-md text-sm"
             />
             {errors.name && <p className="text-sm text-red-500 mt-1">{errors.name}</p>}
           </div>
 
           <div>
-            <Label htmlFor="company">Company</Label>
-            <Input
+            <label htmlFor="company" className="block text-sm font-medium mb-1">Company</label>
+            <input
               id="company"
+              type="text"
               placeholder="Company name"
               value={formData.company || ''}
-              onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, company: e.target.value })}
+              className="w-full px-3 py-2 border rounded-md text-sm"
             />
           </div>
 
           <div>
-            <Label htmlFor="email">Email</Label>
-            <Input
+            <label htmlFor="email" className="block text-sm font-medium mb-1">Email</label>
+            <input
               id="email"
               type="email"
               placeholder="client@example.com"
               value={formData.email || ''}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, email: e.target.value })}
+              className="w-full px-3 py-2 border rounded-md text-sm"
             />
             {errors.email && <p className="text-sm text-red-500 mt-1">{errors.email}</p>}
           </div>
 
           <div>
-            <Label htmlFor="phone">Phone</Label>
-            <Input
+            <label htmlFor="phone" className="block text-sm font-medium mb-1">Phone</label>
+            <input
               id="phone"
+              type="tel"
               placeholder="Phone number"
               value={formData.phone || ''}
-              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, phone: e.target.value })}
+              className="w-full px-3 py-2 border rounded-md text-sm"
             />
           </div>
 
           {errors.submit && <p className="text-sm text-red-500">{errors.submit}</p>}
 
-          <div className="flex gap-2 justify-end">
-            <Button variant="outline" onClick={onClose}>
+          <div className="flex gap-2 justify-end pt-4">
+            <Button variant="outline" onClick={onClose} disabled={updateMutation.isPending}>
               Cancel
             </Button>
             <Button type="submit" disabled={updateMutation.isPending}>
@@ -130,7 +132,7 @@ export function EditClientModal({ clientId, onClose, onSuccess }: EditClientModa
             </Button>
           </div>
         </form>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>
   );
 }

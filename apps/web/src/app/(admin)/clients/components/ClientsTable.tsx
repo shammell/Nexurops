@@ -72,15 +72,13 @@ export function ClientsTable() {
     },
   ]
 
-  // TODO: Replace with actual tRPC call when ready
-  // const { data, isLoading, isError } = trpc.clients.list.useQuery({
-  //   page: 1,
-  //   limit: 10,
-  // })
+  const { data, isLoading, error: queryError, refetch } = (trpc as any).clients.list.useQuery({
+    page: 1,
+    limit: 10,
+  })
 
-  const clients = mockClients
-  const isLoading = false
-  const isError = false
+  const clients = data?.clients || mockClients
+  const isError = !!queryError
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -190,6 +188,7 @@ export function ClientsTable() {
         open={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
         clientId={selectedClientId}
+        onDeleteSuccess={() => refetch()}
       />
     </>
   )
