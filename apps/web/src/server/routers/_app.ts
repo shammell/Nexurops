@@ -1,4 +1,4 @@
-import { router } from '../trpc'
+import { router } from '../../lib/trpc/server'
 import { projectRouter } from './project'
 import { invoiceRouter } from './invoice'
 import { linkedinRouter } from './linkedin'

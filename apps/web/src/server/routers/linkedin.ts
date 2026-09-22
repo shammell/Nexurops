@@ -1,4 +1,4 @@
-import { router, protectedProcedure } from '../trpc'
+import { router, protectedProcedure } from '../../lib/trpc/server'
 import type { LinkedInAnalytics } from '@/types'
 
 export const linkedinRouter = router({

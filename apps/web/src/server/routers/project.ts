@@ -1,10 +1,11 @@
-import { router, protectedProcedure } from '../trpc'
+import { router, protectedProcedure } from '../../lib/trpc/server'
 import { z } from 'zod'
 import type { Project } from '@/types'
 
 export const projectRouter = router({
   getAll: protectedProcedure.query(async ({ ctx }): Promise<Project[]> => {
     // TODO: Replace with actual database query
+    const userId = (ctx.session?.user as any)?.id || '';
     return [
       {
         id: '1',
@@ -15,7 +16,7 @@ export const projectRouter = router({
         budgetUsed: 3500,
         budgetTotal: 5000,
         startDate: new Date('2026-09-01'),
-        clientId: ctx.session.user.id,
+        clientId: userId,
         teamMembers: [
           { id: '1', name: 'John Doe', avatar: '', role: 'Developer' },
           { id: '2', name: 'Jane Smith', avatar: '', role: 'Designer' },

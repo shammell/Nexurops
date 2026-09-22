@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
 
         // Create or update LinkedIn post record
         const post = await db.linkedInPost.upsert({
-          where: { url: payload.url },
+          where: { id: payload.postId },
           create: {
             clientId: payload.clientId,
             url: payload.url,
@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
 
         try {
           const post = await db.linkedInPost.update({
-            where: { url: payload.url },
+            where: { id: payload.postId },
             data: {
               impressions: payload.metrics.impressions,
               likes: payload.metrics.likes,
@@ -119,7 +119,7 @@ export async function POST(req: NextRequest) {
         // Mark post as deleted or remove it
         try {
           await db.linkedInPost.delete({
-            where: { url: payload.url },
+            where: { id: payload.postId },
           });
 
           console.log(`LinkedIn post deleted: ${payload.url}`);

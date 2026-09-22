@@ -1,4 +1,4 @@
-import { router, protectedProcedure } from '../trpc'
+import { router, protectedProcedure } from '../../lib/trpc/server'
 import type { DashboardStats } from '@/types'
 
 export const dashboardRouter = router({
