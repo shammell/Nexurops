@@ -59,6 +59,32 @@
   }
 }
 
+/* Lenis smooth scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-fade-in,
+  .animate-slide-up {
+    animation: none;
+  }
+}
+
+::selection {
+  background: rgb(56 189 248 / 0.35);
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
