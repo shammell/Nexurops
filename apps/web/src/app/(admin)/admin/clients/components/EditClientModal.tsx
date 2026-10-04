@@ -67,7 +67,7 @@ export function EditClientModal({ clientId, onClose, onSuccess }: EditClientModa
   if (isLoading) return <div className="fixed inset-0 z-50 flex items-center justify-center">Loading...</div>;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => !updateMutation.isPending && onClose()}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => !updateMutation.isLoading && onClose()}>
       <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
         <h2 className="text-xl font-bold mb-4">Edit Client</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -124,11 +124,11 @@ export function EditClientModal({ clientId, onClose, onSuccess }: EditClientModa
           {errors.submit && <p className="text-sm text-red-500">{errors.submit}</p>}
 
           <div className="flex gap-2 justify-end pt-4">
-            <Button variant="outline" onClick={onClose} disabled={updateMutation.isPending}>
+            <Button variant="outline" onClick={onClose} disabled={updateMutation.isLoading}>
               Cancel
             </Button>
-            <Button type="submit" disabled={updateMutation.isPending}>
-              {updateMutation.isPending ? 'Saving...' : 'Save Changes'}
+            <Button type="submit" disabled={updateMutation.isLoading}>
+              {updateMutation.isLoading ? 'Saving...' : 'Save Changes'}
             </Button>
           </div>
         </form>

@@ -1,4 +1,5 @@
-import { router, protectedProcedure } from "../server";
+import { router, protectedProcedure, adminProcedure } from "../server";
+import { ownedByClientUser } from "../access";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { InvoiceStatus } from "@prisma/client";
@@ -24,6 +25,7 @@ export const invoicesRouter = router({
       const skip = (page - 1) * limit;
 
       const where = {
+        ...ownedByClientUser(ctx),
         ...(clientId && { clientId }),
         ...(status && { status }),
       };
@@ -55,8 +57,8 @@ export const invoicesRouter = router({
   getById: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      const invoice = await ctx.db.invoice.findUnique({
-        where: { id: input.id },
+      const invoice = await ctx.db.invoice.findFirst({
+        where: { id: input.id, ...ownedByClientUser(ctx) },
         include: {
           client: true,
         },
@@ -72,7 +74,7 @@ export const invoicesRouter = router({
       return invoice;
     }),
 
-  create: protectedProcedure
+  create: adminProcedure
     .input(createInvoiceSchema)
     .mutation(async ({ ctx, input }) => {
       // Verify client exists
@@ -82,10 +84,6 @@ export const invoicesRouter = router({
 
       if (!client) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Client not found" });
-      }
-
-      if (client.userId !== (ctx.session.user as any).id) {
-        throw new TRPCError({ code: "FORBIDDEN" });
       }
 
       // Generate invoice number
@@ -107,7 +105,9 @@ export const invoicesRouter = router({
       return invoice;
     }),
 
-  pay: protectedProcedure
+  // Manual mark-as-paid for staff (e.g. bank transfer). Client self-service payment must go
+  // through Stripe + webhook verification, never a client-callable mutation.
+  pay: adminProcedure
     .input(
       z.object({
         id: z.string(),
@@ -144,7 +144,7 @@ export const invoicesRouter = router({
       return updatedInvoice;
     }),
 
-  delete: protectedProcedure
+  delete: adminProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const invoice = await ctx.db.invoice.findUnique({

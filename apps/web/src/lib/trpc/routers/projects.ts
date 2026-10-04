@@ -1,4 +1,5 @@
-import { router, protectedProcedure } from "../server";
+import { router, protectedProcedure, adminProcedure } from "../server";
+import { ownedByClientUser } from "../access";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { ProjectStatus } from "@prisma/client";
@@ -38,6 +39,7 @@ export const projectsRouter = router({
       const skip = (page - 1) * limit;
 
       const where = {
+        ...ownedByClientUser(ctx),
         ...(clientId && { clientId }),
         ...(status && { status }),
       };
@@ -69,8 +71,8 @@ export const projectsRouter = router({
   getById: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      const project = await ctx.db.project.findUnique({
-        where: { id: input.id },
+      const project = await ctx.db.project.findFirst({
+        where: { id: input.id, ...ownedByClientUser(ctx) },
         include: {
           client: true,
         },
@@ -86,20 +88,15 @@ export const projectsRouter = router({
       return project;
     }),
 
-  create: protectedProcedure
+  create: adminProcedure
     .input(createProjectSchema)
     .mutation(async ({ ctx, input }) => {
-      // Verify client exists and belongs to user
       const client = await ctx.db.client.findUnique({
         where: { id: input.clientId },
       });
 
       if (!client) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Client not found" });
-      }
-
-      if (client.userId !== (ctx.session.user as any).id) {
-        throw new TRPCError({ code: "FORBIDDEN" });
       }
 
       const project = await ctx.db.project.create({
@@ -117,7 +114,7 @@ export const projectsRouter = router({
       return project;
     }),
 
-  updateStatus: protectedProcedure
+  updateStatus: adminProcedure
     .input(
       z.object({
         id: z.string(),
@@ -133,7 +130,7 @@ export const projectsRouter = router({
       return project;
     }),
 
-  update: protectedProcedure
+  update: adminProcedure
     .input(updateProjectSchema)
     .mutation(async ({ ctx, input }) => {
       const { id, ...data } = input;
@@ -146,7 +143,7 @@ export const projectsRouter = router({
       return project;
     }),
 
-  delete: protectedProcedure
+  delete: adminProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const project = await ctx.db.project.findUnique({
