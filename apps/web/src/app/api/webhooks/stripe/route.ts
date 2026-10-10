@@ -3,13 +3,22 @@ import Stripe from "stripe";
 import { db } from "@/lib/db";
 import { OrderStatus, ProjectStatus } from "@prisma/client";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2023-10-16",
-});
-
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+// Created per request so a missing key can't crash the build or module load.
+// Payments currently run through Wise/Payoneer invoices; Stripe is optional.
+function getStripe(): { stripe: Stripe; webhookSecret: string } | null {
+  const key = process.env.STRIPE_SECRET_KEY;
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  if (!key || !webhookSecret) return null;
+  return { stripe: new Stripe(key, { apiVersion: "2023-10-16" }), webhookSecret };
+}
 
 export async function POST(req: NextRequest) {
+  const config = getStripe();
+  if (!config) {
+    return NextResponse.json({ error: "Stripe is not configured" }, { status: 503 });
+  }
+  const { stripe, webhookSecret } = config;
+
   const body = await req.text();
   const signature = req.headers.get("stripe-signature");
 

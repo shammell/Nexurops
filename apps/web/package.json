@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
-    "test:unit": "tsx --test src/lib/trpc/routers/authz.test.ts",
+    "test:unit": "tsx --test src/lib/trpc/routers/authz.test.ts src/lib/notify.test.ts src/lib/auth.test.ts",
     "test:e2e": "playwright test",
     "clean": "rm -rf .next dist",
     "db:generate": "prisma generate",

@@ -1,7 +1,7 @@
 "use client";
 
-import { signIn } from "next-auth/react";
-import { useState, type FormEvent } from "react";
+import { getProviders, signIn } from "next-auth/react";
+import { useEffect, useState, type FormEvent } from "react";
 
 const input =
   "w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-sm text-foreground placeholder:text-white/30 focus-visible:border-primary-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/40";
@@ -12,9 +12,31 @@ function safeCallback(): string {
   return raw.startsWith("/") && !raw.startsWith("//") ? raw : "/client/dashboard";
 }
 
+// NextAuth error codes -> human messages (https://next-auth.js.org/configuration/pages#sign-in-page)
+const AUTH_ERRORS: Record<string, string> = {
+  OAuthAccountNotLinked: "This email is already linked to a different sign-in method. Use the one you signed up with.",
+  OAuthSignin: "Couldn't start sign-in with that provider. Please try again.",
+  OAuthCallback: "The provider sign-in didn't complete. Please try again.",
+  OAuthCreateAccount: "We couldn't create your account. Please try again or contact us.",
+  Callback: "Sign-in failed on our side. Please try again.",
+  AccessDenied: "Access denied.",
+  Configuration: "Sign-in is temporarily unavailable.",
+  CredentialsSignin: "Invalid email or password.",
+};
+
+const OAUTH_LABELS: Record<string, string> = { google: "Continue with Google", github: "Continue with GitHub" };
+
 export default function SignInPage() {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [oauth, setOauth] = useState<string[]>([]);
+
+  useEffect(() => {
+    const code = new URLSearchParams(window.location.search).get("error");
+    if (code) setError(AUTH_ERRORS[code] ?? "Sign-in failed. Please try again.");
+    // Only show providers the server actually has credentials for.
+    void getProviders().then((p) => setOauth(Object.keys(p ?? {}).filter((id) => id in OAUTH_LABELS)));
+  }, []);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -41,14 +63,20 @@ export default function SignInPage() {
           <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-primary-300">Client portal</p>
           <h1 className="mt-3 font-display text-3xl font-light">Sign in</h1>
         </div>
-        <div className="grid gap-3">
-          <button type="button" onClick={() => signIn("google", { callbackUrl: safeCallback() })} className="rounded-lg border border-white/10 py-2.5 text-sm hover:bg-white/5">
-            Continue with Google
-          </button>
-          <button type="button" onClick={() => signIn("github", { callbackUrl: safeCallback() })} className="rounded-lg border border-white/10 py-2.5 text-sm hover:bg-white/5">
-            Continue with GitHub
-          </button>
-        </div>
+        {oauth.length > 0 && (
+          <div className="grid gap-3">
+            {oauth.map((id) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => signIn(id, { callbackUrl: safeCallback() })}
+                className="rounded-lg border border-white/10 py-2.5 text-sm hover:bg-white/5"
+              >
+                {OAUTH_LABELS[id]}
+              </button>
+            ))}
+          </div>
+        )}
         <form onSubmit={onSubmit} className="space-y-3">
           <input name="email" type="email" required autoComplete="username" placeholder="Email" className={input} />
           <input name="password" type="password" required autoComplete="current-password" placeholder="Password" className={input} />

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { LeadSource } from "@prisma/client";
 import { z } from "zod";
 import { db } from "@/lib/db";
+import { notifyNewLead } from "@/lib/notify";
 
 export const runtime = "nodejs";
 
@@ -87,6 +88,15 @@ export async function POST(req: Request) {
           ip: ip ?? "unknown",
         },
       },
+    });
+    // Awaited (bounded by a 3s timeout) so serverless doesn't drop it after the response.
+    await notifyNewLead({
+      name: d.name,
+      email: d.email,
+      company: d.company || null,
+      service: d.service || null,
+      message: d.message,
+      utmSource: d.utmSource ?? null,
     });
     return NextResponse.json({ ok: true });
   } catch (err) {

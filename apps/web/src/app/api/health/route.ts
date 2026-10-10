@@ -9,7 +9,7 @@ export async function GET() {
 
   try {
     // Check database connection
-    await db.$queryRaw`SELECT 1`;
+    await db.$runCommandRaw({ ping: 1 });
     dbHealthy = true;
   } catch (err) {
     console.error("Database health check failed:", err);
