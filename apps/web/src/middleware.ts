@@ -65,7 +65,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Protect client and admin routes
-  if (path.startsWith("/client") || path.startsWith("/admin")) {
+  if (path === "/client" || path.startsWith("/client/") || path === "/admin" || path.startsWith("/admin/")) {
     const token = await getToken({
       req: request,
       secret: process.env.NEXTAUTH_SECRET,

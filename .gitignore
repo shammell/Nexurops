@@ -46,3 +46,9 @@ MEMORY.md
 abhi-aik-phd-plan-zesty-locket.md
 TRPC_MUTATIONS_FIXES.md
 DIAGNOSTIC_REPORT.md
+
+# Playwright / TS artifacts
+test-results/
+playwright-report/
+*.tsbuildinfo
+*.webm

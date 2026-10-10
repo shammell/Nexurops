@@ -1,20 +1,21 @@
 // =============================================================================
-// Nexurops Agency Platform - PostgreSQL Schema (Prisma)
+// Nexurops Agency Platform - MongoDB Schema (Prisma)
 // =============================================================================
-// Target: PostgreSQL 15+ (Supabase production, Docker local dev)
-// Auth:   NextAuth.js v4 with @auth/prisma-adapter
-// Scale:  Designed for 100k+ users, composite indexes on hot query paths
+// Target: MongoDB Atlas (replica set required for Prisma transactions)
+// Auth:   NextAuth.js v4 with @next-auth/prisma-adapter
+// IDs:    cuid strings stored as `_id` (keeps ids opaque and FK types simple)
+// Money:  Float (MongoDB connector has no Decimal); amounts are USD with 2dp
+// Note:   no @unique on optional fields: MongoDB unique indexes treat every
+//         null as the same value, so a second null would be rejected.
 // =============================================================================
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL") // Supabase connection pooling bypass for migrations
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
 }
 
 // =============================================================================
@@ -100,7 +101,7 @@ enum TeamRole {
 // =============================================================================
 
 model User {
-  id            String    @id @default(cuid())
+  id            String    @id @default(cuid()) @map("_id")
   email         String    @unique // unique constraint = implicit unique index
   emailVerified DateTime?
   name          String?
@@ -124,17 +125,17 @@ model User {
 }
 
 model Account {
-  id                String  @id @default(cuid())
+  id                String  @id @default(cuid()) @map("_id")
   userId            String
   type              String  // "oauth" | "oidc" | "email" | "credentials"
   provider          String  // "google" | "github" etc.
   providerAccountId String
-  refresh_token     String? @db.Text // OAuth tokens can exceed 191 chars
-  access_token      String? @db.Text
+  refresh_token     String? // OAuth tokens can exceed 191 chars
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -145,7 +146,7 @@ model Account {
 }
 
 model Session {
-  id           String   @id @default(cuid())
+  id           String   @id @default(cuid()) @map("_id")
   sessionToken String   @unique
   userId       String
   expires      DateTime
@@ -157,6 +158,7 @@ model Session {
 }
 
 model VerificationToken {
+  id         String   @id @default(cuid()) @map("_id")
   identifier String
   token      String   @unique
   expires    DateTime
@@ -170,7 +172,7 @@ model VerificationToken {
 // =============================================================================
 
 model Client {
-  id      String       @id @default(cuid())
+  id      String       @id @default(cuid()) @map("_id")
   userId  String
   name    String
   company String?
@@ -194,16 +196,16 @@ model Client {
   @@index([userId])
   @@index([status])
   @@index([userId, status])
-  @@index([userId, createdAt(sort: Desc)])
+  @@index([userId, createdAt])
   @@map("clients")
 }
 
 model Service {
-  id          String          @id @default(cuid())
+  id          String          @id @default(cuid()) @map("_id")
   name        String
-  description String          @db.Text
+  description String
   slug        String          @unique // URL-safe identifier, e.g. "ai-consulting"
-  basePrice   Decimal         @db.Decimal(10, 2) // max 99,999,999.99
+  basePrice   Float          // max 99,999,999.99
   features    Json            @default("[]") // string[] of feature names
   category    ServiceCategory
   isActive    Boolean         @default(true)
@@ -220,20 +222,20 @@ model Service {
 }
 
 model Order {
-  id              String      @id @default(cuid())
+  id              String      @id @default(cuid()) @map("_id")
   clientId        String
   serviceId       String
-  totalAmount     Decimal     @db.Decimal(10, 2)
+  totalAmount     Float     
   status          OrderStatus @default(PENDING)
-  stripeInvoiceId String?     @unique // Stripe idempotency key
-  notes           String?     @db.Text
+  stripeInvoiceId String? // Stripe payment reference (indexed, not unique: see header note)
+  notes           String?
 
   client  Client  @relation(fields: [clientId], references: [id], onDelete: Restrict)
   service Service @relation(fields: [serviceId], references: [id], onDelete: Restrict)
 
-  // --- 1:1 optional downstream ---
-  project Project?
-  invoice Invoice?
+  // --- downstream (one per order in practice; 1:n because a 1:1 needs @unique on an optional FK) ---
+  projects Project[]
+  invoices Invoice[]
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -243,18 +245,19 @@ model Order {
   @@index([serviceId])
   @@index([status])
   @@index([clientId, status])
-  @@index([clientId, createdAt(sort: Desc)])
+  @@index([clientId, createdAt])
+  @@index([stripeInvoiceId])
   @@map("orders")
 }
 
 model Project {
-  id          String        @id @default(cuid())
+  id          String        @id @default(cuid()) @map("_id")
   clientId    String
-  orderId     String?       @unique // 1:1 with Order (optional -- projects can exist without orders)
+  orderId     String? // optional: projects can exist without orders
   title       String
-  description String?       @db.Text
+  description String?
   status      ProjectStatus @default(BACKLOG)
-  budget      Decimal?      @db.Decimal(10, 2)
+  budget      Float?      
   startDate   DateTime?
   deadline    DateTime?
   metadata    Json          @default("{}") // { accountManager, tags[], customFields }
@@ -271,25 +274,26 @@ model Project {
   @@index([clientId])
   @@index([status])
   @@index([clientId, status])
-  @@index([clientId, createdAt(sort: Desc)])
+  @@index([clientId, createdAt])
+  @@index([orderId])
   @@map("projects")
 }
 
 model Invoice {
-  id              String        @id @default(cuid())
+  id              String        @id @default(cuid()) @map("_id")
   clientId        String
   projectId       String?
-  orderId         String?       @unique // 1:1 with Order
+  orderId         String?
   invoiceNumber   String        @unique // human-readable: INV-2024-0001
-  amount          Decimal       @db.Decimal(10, 2) // subtotal before tax
-  tax             Decimal       @default(0) @db.Decimal(10, 2)
-  totalAmount     Decimal       @db.Decimal(10, 2) // amount + tax
-  currency        String        @default("USD") @db.VarChar(3)
+  amount          Float        // subtotal before tax
+  tax             Float       @default(0) 
+  totalAmount     Float        // amount + tax
+  currency        String        @default("USD")
   status          InvoiceStatus @default(DRAFT)
   dueDate         DateTime
   paidAt          DateTime?
-  stripeInvoiceId String?       @unique
-  notes           String?       @db.Text
+  stripeInvoiceId String?
+  notes           String?
 
   client  Client   @relation(fields: [clientId], references: [id], onDelete: Restrict)
   project Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
@@ -303,7 +307,9 @@ model Invoice {
   @@index([status])
   @@index([dueDate])
   @@index([clientId, status])
-  @@index([clientId, createdAt(sort: Desc)])
+  @@index([clientId, createdAt])
+  @@index([orderId])
+  @@index([stripeInvoiceId])
   @@map("invoices")
 }
 
@@ -312,10 +318,10 @@ model Invoice {
 // =============================================================================
 
 model LinkedInPost {
-  id                String     @id @default(cuid())
+  id                String     @id @default(cuid()) @map("_id")
   clientId          String
-  url               String?    @unique // LinkedIn post URL (set after publish)
-  text              String     @db.Text
+  url               String? // LinkedIn post URL (set after publish)
+  text              String
   status            PostStatus @default(DRAFT)
   humanizationScore Float?     // 0.0 - 1.0 AI detection avoidance score
   impressions       Int        @default(0)
@@ -334,15 +340,15 @@ model LinkedInPost {
   @@index([clientId])
   @@index([status])
   @@index([clientId, status])
-  @@index([clientId, createdAt(sort: Desc)])
+  @@index([clientId, createdAt])
   @@index([publishedAt])
   @@map("linkedin_posts")
 }
 
 model LinkedInMetrics {
-  id                String   @id @default(cuid())
+  id                String   @id @default(cuid()) @map("_id")
   clientId          String
-  date              DateTime @db.Date // one row per client per day
+  date              DateTime // one row per client per day
   totalImpressions  Int      @default(0)
   totalEngagement   Int      @default(0)
   postsPublished    Int      @default(0)
@@ -360,12 +366,12 @@ model LinkedInMetrics {
 // =============================================================================
 
 model Lead {
-  id          String     @id @default(cuid())
+  id          String     @id @default(cuid()) @map("_id")
   name        String
   email       String     // not unique: same person can submit multiple leads
   phone       String?
   service     String?    // free-text or ServiceCategory string
-  message     String?    @db.Text
+  message     String?
   source      LeadSource @default(WEBSITE)
   utmCampaign String?
   utmSource   String?
@@ -383,7 +389,7 @@ model Lead {
   @@index([source])
   @@index([source, status])
   @@index([assignedTo])
-  @@index([createdAt(sort: Desc)])
+  @@index([createdAt])
   @@map("leads")
 }
 
@@ -392,7 +398,7 @@ model Lead {
 // =============================================================================
 
 model TeamMember {
-  id          String   @id @default(cuid())
+  id          String   @id @default(cuid()) @map("_id")
   userId      String   @unique // 1:1 with User -- a user is on the team or not
   role        TeamRole @default(ADMIN)
   department  String?
@@ -407,40 +413,3 @@ model TeamMember {
   @@index([role])
   @@map("team_members")
 }
-
-// =============================================================================
-// NOTES ON FEATURES REQUIRING RAW SQL MIGRATIONS
-// =============================================================================
-//
-// 1. FULL-TEXT SEARCH (GIN indexes on tsvector columns):
-//    After running `prisma migrate dev`, add a raw migration:
-//
-//    ALTER TABLE leads ADD COLUMN search_vector tsvector
-//      GENERATED ALWAYS AS (
-//        to_tsvector('english', coalesce(name,'') || ' ' || coalesce(email,'') || ' ' || coalesce(message,''))
-//      ) STORED;
-//    CREATE INDEX idx_leads_search ON leads USING GIN(search_vector);
-//
-//    ALTER TABLE projects ADD COLUMN search_vector tsvector
-//      GENERATED ALWAYS AS (
-//        to_tsvector('english', coalesce(title,'') || ' ' || coalesce(description,''))
-//      ) STORED;
-//    CREATE INDEX idx_projects_search ON projects USING GIN(search_vector);
-//
-// 2. CASE-INSENSITIVE EMAIL UNIQUENESS (if needed beyond @unique):
-//    CREATE UNIQUE INDEX idx_users_email_ci ON users (LOWER(email));
-//    CREATE UNIQUE INDEX idx_clients_email_ci ON clients (LOWER(email));
-//
-// 3. SOFT DELETE PARTIAL INDEXES (query only active records efficiently):
-//    CREATE INDEX idx_clients_active ON clients (status) WHERE deleted_at IS NULL;
-//    CREATE INDEX idx_projects_active ON projects (status) WHERE deleted_at IS NULL;
-//    CREATE INDEX idx_orders_active ON orders (status) WHERE deleted_at IS NULL;
-//    CREATE INDEX idx_invoices_active ON invoices (status) WHERE deleted_at IS NULL;
-//
-// 4. CHECK CONSTRAINTS (Prisma cannot declare these):
-//    ALTER TABLE orders ADD CONSTRAINT chk_order_amount CHECK (total_amount > 0);
-//    ALTER TABLE invoices ADD CONSTRAINT chk_invoice_amount CHECK (amount >= 0);
-//    ALTER TABLE invoices ADD CONSTRAINT chk_invoice_total CHECK (total_amount > 0);
-//    ALTER TABLE linkedin_posts ADD CONSTRAINT chk_humanization
-//      CHECK (humanization_score IS NULL OR (humanization_score >= 0 AND humanization_score <= 1));
-// =============================================================================
