@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
 import { ContactForm } from "@/components/marketing/ContactForm";
 import { Reveal } from "@/components/marketing/Reveal";
+import { StickyCta } from "@/components/marketing/StickyCta";
 import {
   Agents,
   DevOps,
   Faq,
+  FinalCta,
   Hero,
   Pricing,
+  Problem,
   Process,
   Security,
   Work,
@@ -35,21 +38,26 @@ export default function HomePage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      {/* Conversion order: outcome → pain → price certainty → how → proof → objections → ask. */}
       <Hero />
+      <Problem />
+      <Pricing />
       <Agents />
       <DevOps />
+      <Process />
       <Security />
       <Work />
-      <Process />
-      <Pricing />
       <Faq />
+      <FinalCta />
+      <StickyCta />
       <section id="contact" data-scene="4" className="py-32">
         <div className="mx-auto w-full max-w-3xl px-6">
           <Reveal>
-            <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-primary-300">08 / Contact</p>
-            <h2 className="mt-4 font-display text-4xl font-light tracking-tight md:text-6xl">Let's talk.</h2>
+            <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-primary-300">Contact</p>
+            <h2 className="mt-4 font-display text-4xl font-light tracking-tight md:text-6xl">Prefer to write?</h2>
             <p className="mt-3 text-muted-foreground">
-              Tell us what you're running. We'll come back with where agents and automation help most.
+              Tell us what you're running. You'll get a reply with a suggested sprint and price within one
+              business day.
             </p>
           </Reveal>
           <Reveal delay={0.1} className="mt-10">

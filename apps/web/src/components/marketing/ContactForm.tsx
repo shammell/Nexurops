@@ -117,8 +117,8 @@ export function ContactForm() {
         <p role="alert" className="text-sm text-red-400">{error}</p>
       )}
       <div className="flex flex-wrap items-center gap-4">
-        <Button type="submit" disabled={status === "sending"} size="lg" className="rounded-full">
-          {status === "sending" ? "Sending…" : "Send message"}
+        <Button type="submit" variant="cta" disabled={status === "sending"} size="lg" className="rounded-full">
+          {status === "sending" ? "Sending…" : "Get my sprint & price →"}
         </Button>
         <CalendlyButton variant="ghost" size="lg" className="rounded-full">
           Or book a call ↗

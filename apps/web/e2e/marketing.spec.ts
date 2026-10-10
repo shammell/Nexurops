@@ -24,15 +24,13 @@ test("home loads: h1, no pageerror, canvas", async ({ page }) => {
 test("nav Book a call opens calendly overlay", async ({ page }) => {
   await page.goto("/");
   const btn = page.locator("header, nav").getByRole("button", { name: /Book a call/ }).first();
-  const overlay = page.locator(".calendly-overlay");
+  // Assert on the booking iframe itself: Calendly's wrapper class names change between widget releases.
+  const iframe = page.locator(`iframe[src^="${CALENDLY}"]`);
   // SSR renders the button before React hydrates; a click before hydration is a no-op, so retry.
   await expect(async () => {
     await btn.click();
-    await expect(overlay).toBeAttached({ timeout: 3_000 });
+    await expect(iframe).toBeAttached({ timeout: 3_000 });
   }).toPass({ timeout: 45_000, intervals: [500, 1_000, 2_000] });
-  const iframe = overlay.locator("iframe");
-  await expect(iframe).toBeAttached();
-  expect(await iframe.getAttribute("src")).toMatch(new RegExp("^" + CALENDLY.replace(/[.\/]/g, "\$&")));
 });
 
 test.describe("/api/leads", () => {
@@ -60,7 +58,7 @@ test.describe("/api/leads", () => {
     await page.locator("#name").fill(valid.name);
     await page.locator("#email").fill(valid.email);
     await page.locator("#message").fill(valid.message);
-    await page.getByRole("button", { name: "Send message" }).click();
+    await page.getByRole("button", { name: /Get my sprint/ }).click();
     const sent = page.getByRole("status").filter({ hasText: "Message received" });
     const alert = page.locator("form").getByRole("alert");
     await expect(sent.or(alert)).toBeVisible();
@@ -87,6 +85,20 @@ test.describe("reduced motion", () => {
     await expect(page.locator("h1")).toContainText("AI agents");
     await page.waitForTimeout(1500); // allow client effect to pick static mode
     await expect(page.locator("canvas")).toHaveCount(0);
+  });
+
+  test("below-the-fold sections are visible without scrolling into view", async ({ page }) => {
+    await page.goto("/");
+    // Regression: Reveal used to keep the server's inline opacity:0 under reduced motion.
+    await expect(page.locator("#pricing h2")).toHaveCSS("opacity", "1");
+    const hiddenWrappers = await page
+      .locator("#pricing h2")
+      .evaluate((el) => {
+        const out: string[] = [];
+        for (let e: Element | null = el; e; e = e.parentElement) out.push(getComputedStyle(e).opacity);
+        return out.filter((o) => o !== "1").length;
+      });
+    expect(hiddenWrappers).toBe(0);
   });
 });
 

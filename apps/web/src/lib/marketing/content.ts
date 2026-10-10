@@ -88,32 +88,76 @@ export const processSteps = [
   { step: "01", title: "Discover", body: "We audit your stack, incidents and delivery flow, then agree on measurable goals." },
   { step: "02", title: "Design", body: "Architecture, agent behaviors and guardrails documented before anything ships." },
   { step: "03", title: "Deploy", body: "Iterative rollout with tests, observability and a human in the loop from day one." },
-  { step: "04", title: "Operate", body: "We run, monitor and improve it with you under a monthly engagement." },
+  { step: "04", title: "Operate", body: "Optional: we run, monitor and improve it with you under a monthly engagement." },
 ] as const;
+
+export const painPoints = [
+  {
+    title: "Releases are slow and scary",
+    body: "Manual deploys, flaky pipelines, and a Friday-afternoon rule nobody wrote down.",
+  },
+  {
+    title: "The cloud bill keeps climbing",
+    body: "Idle instances and oversized databases you pay for every month without noticing.",
+  },
+  {
+    title: "Your team drowns in repetitive work",
+    body: "Support tickets, alert triage and status questions eat the hours meant for product.",
+  },
+] as const;
+
+/** Honest risk-reducers shown under every primary CTA. */
+export const ctaAssurances = ["Free 30-min call", "Fixed price, no retainer", "10-day refund guarantee"] as const;
+
+/** Price anchor: what the same outcome costs the usual way (US market, approximate). */
+export const priceAnchor = [
+  { label: "Senior DevOps hire (US)", value: "$12,000+/mo", note: "plus 2–3 months to recruit" },
+  { label: "Typical agency retainer", value: "$5,000+/mo", note: "with a 3–6 month minimum" },
+  { label: "Nexurops sprint", value: "$750–$1,500", note: "one-time, live in 5–10 days" },
+] as const;
+
+/**
+ * Real capacity limit, shown as-is. Keep this TRUE: update the number when capacity changes.
+ * Fake scarcity destroys trust the moment a buyer notices.
+ */
+export const capacityNote = "We take on 3 new sprints per month so every one ships on time.";
+
+export const guarantee =
+  "Fixed scope, fixed price, 50% upfront. If your sprint isn't live in 10 business days, you get a full refund.";
 
 export const pricing = [
   {
-    name: "Starter",
-    price: "$2,500",
-    period: "/mo",
-    blurb: "For teams getting their delivery and monitoring in order.",
-    features: ["CI/CD pipeline setup", "Basic monitoring and alerts", "Monthly infra review", "Email support"],
+    name: "Cloud & CI/CD Audit",
+    price: "$750",
+    period: " one-time",
+    blurb: "Find where your pipeline and cloud bill are leaking time and money.",
+    features: [
+      "Review of CI/CD, cloud setup and monthly spend",
+      "Written report with prioritized fixes",
+      "Top 3 fixes implemented",
+      "Delivered in 5 business days",
+    ],
     featured: false,
   },
   {
-    name: "Professional",
-    price: "$5,000",
-    period: "/mo",
-    blurb: "AI agents and hands-on DevOps for growing products.",
-    features: ["Everything in Starter", "1 custom AI agent", "Multi-cloud IaC (Terraform)", "DevSecOps scanning", "Priority support"],
+    name: "AI Agent Sprint",
+    price: "$1,500",
+    period: " one-time",
+    blurb: "One production AI agent or automation, live in your tools.",
+    features: [
+      "Support triage, lead qualifier, doc Q&A or ops workflow",
+      "Wired into your stack (Slack, email, CRM, repo)",
+      "Guardrails, logging and handover docs",
+      "Live in 10 business days or full refund",
+    ],
     featured: true,
   },
   {
-    name: "Enterprise",
-    price: "Custom",
-    period: "",
-    blurb: "Compliance-driven, multi-team programs.",
-    features: ["Multiple custom agents", "SOC 2 / HIPAA readiness", "Dedicated engineer", "SLA and on-call"],
+    name: "Ongoing Ops",
+    price: "From $2,500",
+    period: "/mo",
+    blurb: "After a sprint: we run, monitor and extend what we built.",
+    features: ["Monitoring and on-call support", "New agents and automations", "Monthly infra and cost review", "Priority Slack support"],
     featured: false,
   },
 ] as const;
@@ -137,7 +181,11 @@ export const faqs = [
   },
   {
     q: "How do we start?",
-    a: "Book a call. We review your stack, agree on scope, and propose a first engagement.",
+    a: "Book a 30-minute call. We review your stack, pick a fixed-price sprint, and send a scope within 24 hours. Most clients start with an AI Agent Sprint or a Cloud & CI/CD Audit.",
+  },
+  {
+    q: "How does payment work?",
+    a: "50% upfront to start, 50% on delivery, invoiced in USD. We accept bank transfer via Wise or Payoneer; card payment is available on request.",
   },
 ] as const;
 

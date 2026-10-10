@@ -37,7 +37,7 @@ export function Nav() {
           >
             Client portal
           </Link>
-          <CalendlyButton size="sm" className="rounded-full">
+          <CalendlyButton variant="cta" size="sm" className="rounded-full">
             Book a call ↗
           </CalendlyButton>
           <button

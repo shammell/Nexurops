@@ -14,6 +14,8 @@ const buttonVariants = cva(
         secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
         ghost: 'hover:bg-accent hover:text-accent-foreground',
         link: 'text-primary underline-offset-4 hover:underline',
+        // High-contrast warm CTA: the only amber element on the page, so the eye lands on it.
+        cta: 'bg-amber-400 font-semibold text-black shadow-[0_0_32px_-6px_rgba(251,191,36,0.6)] hover:bg-amber-300',
       },
       size: {
         default: 'h-10 px-4 py-2',
